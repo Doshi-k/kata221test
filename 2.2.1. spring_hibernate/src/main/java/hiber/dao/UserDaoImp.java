@@ -4,8 +4,6 @@ import hiber.model.User;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -23,7 +21,8 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public User getUserByCar(String model, int series) {
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User u where u.car.model=?1 and u.car.series=?2");
+        TypedQuery<User> query = sessionFactory.getCurrentSession().
+                createQuery("select u from User u join fetch u.car where (u.car.model=?1 and u.car.series=?2)");
         query.setParameter(1, model).setParameter(2, series);
         return query.getSingleResult();
     }
@@ -31,7 +30,7 @@ public class UserDaoImp implements UserDao {
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("from User");
+        TypedQuery<User> query = sessionFactory.getCurrentSession().createQuery("select u from User u join fetch u.car");
         return query.getResultList();
     }
 

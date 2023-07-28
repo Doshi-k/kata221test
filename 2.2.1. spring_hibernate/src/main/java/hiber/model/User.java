@@ -1,10 +1,22 @@
 package hiber.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.GenerationType;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
 @Table(name = "users")
 public class User {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Car car;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,10 +46,6 @@ public class User {
         this.email = email;
         this.car = car;
     }
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "car")
-    private Car car;
 
     public Car getCar() {
         return car;
